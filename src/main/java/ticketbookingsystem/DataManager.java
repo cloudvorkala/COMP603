@@ -104,22 +104,22 @@ public class DataManager {
 
     // Save user with encrypted password into the database
     public void saveUser(String username, String email, String plainTextPassword, Cipher cipher) {
-        String encryptedPassword = cipher.encryptMessage(plainTextPassword);  // Encrypt password using Cipher class
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO USERS (username, email, encrypted_password) VALUES (?, ?, ?)")) {
+    String encryptedPassword = cipher.encryptMessage(plainTextPassword);  // Encrypt password using Cipher class
+    //System.out.println("Storing encrypted password: " + encryptedPassword);  // 打印加密密码以确认它是正确的
+    try (Connection conn = DriverManager.getConnection(DB_URL);
+         PreparedStatement ps = conn.prepareStatement(
+            "INSERT INTO USERS (username, email, encrypted_password) VALUES (?, ?, ?)")) {
 
-            ps.setString(1, username);
-            ps.setString(2, email);
-            ps.setString(3, encryptedPassword);
-            ps.executeUpdate();
+        ps.setString(1, username);
+        ps.setString(2, email);
+        ps.setString(3, encryptedPassword);
+        ps.executeUpdate();
 
-            System.out.println("User saved successfully.");
-
-        } catch (SQLException ex) {
-            System.out.println("Error saving user: " + ex.getMessage());
-        }
+        System.out.println("User saved successfully.");
+    } catch (SQLException ex) {
+        System.out.println("Error saving user: " + ex.getMessage());
     }
+}
 
     // Find user by username in the database
     public Customer findCustomerByUsername(String username) {

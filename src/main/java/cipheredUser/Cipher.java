@@ -21,8 +21,8 @@ public class Cipher {
     // Generate RSA key pair using the 'endn' class
     private void generateKeys() {
         SecureRandom random = new SecureRandom();
-        BigInteger p = BigInteger.probablePrime(64, random);
-        BigInteger q = BigInteger.probablePrime(64, random);
+        BigInteger p = BigInteger.probablePrime(16, random);
+        BigInteger q = BigInteger.probablePrime(16, random);
         BigInteger s = BigInteger.valueOf(65537);  // Use the standard RSA public exponent 65537
 
         // Use the 'endn' class to generate key pair
@@ -64,7 +64,7 @@ public class Cipher {
                 this.e = new BigInteger(rs.getString("e"));
                 this.d = new BigInteger(rs.getString("d"));
                 this.n = new BigInteger(rs.getString("n"));
-                System.out.println("Loaded keys: e=" + e + ", d=" + d + ", n=" + n);  // 打印加载的密钥
+                //System.out.println("Loaded keys: e=" + e + ", d=" + d + ", n=" + n);  // 打印加载的密钥
                 System.out.println("Keys loaded successfully from the database.");
                 return true;  // Successfully loaded keys
             }
@@ -77,8 +77,9 @@ public class Cipher {
     // Encrypt a message using the 'eM' class
     public String encryptMessage(String input) {
         try {
-            // Call the 'eM' class method to encrypt the message
-            return eM.eM(input, this.e, this.n);
+            String encryptedMessage = eM.eM(input, this.e, this.n);
+            //System.out.println("Encrypting: " + input + " -> " + encryptedMessage);  // 打印加密结果
+            return encryptedMessage;
         } catch (Exception ex) {
             throw new RuntimeException("Error during encryption: " + ex.getMessage(), ex);
         }
@@ -106,7 +107,8 @@ public class Cipher {
 
     // Check if the input password matches the encrypted password
     public boolean checkPassword(String storedEncryptedPassword, String inputPassword) {
-        String encryptedInput = encryptMessage(inputPassword);  // Encrypt the input password
-        return storedEncryptedPassword.equals(encryptedInput);  // Compare with the stored encrypted password
-    }
+    String encryptedInput = encryptMessage(inputPassword).trim();  // 去掉可能的空格或其他字符
+    //System.out.println("Checking password: Encrypted input -> " + encryptedInput + ", Stored -> " + storedEncryptedPassword.trim());  // 确保比较一致
+    return storedEncryptedPassword.trim().equals(encryptedInput);  // 比较时确保两边一致
+}
 }
