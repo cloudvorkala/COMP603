@@ -41,7 +41,7 @@ public class Customer {
     // Check if the provided plain text password matches the encrypted one
     public boolean checkPassword(String plainTextPassword, Cipher cipher) {
         // Use Cipher class to check if the provided password matches the encrypted one
-        return cipher.checkPasswd(encryptedPassword, plainTextPassword);
+        return cipher.checkPassword(encryptedPassword, plainTextPassword);
     }
     public void displayMenu() {
         System.out.println("1. Book a ticket");

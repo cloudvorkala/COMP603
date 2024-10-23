@@ -149,26 +149,27 @@ public class DataManager {
 
     // Check user password
     public boolean checkUserPassword(String username, String inputPassword, Cipher cipher) {
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement ps = conn.prepareStatement(
-                "SELECT encrypted_password FROM USERS WHERE username = ?")) {
+    try (Connection conn = DriverManager.getConnection(DB_URL);
+         PreparedStatement ps = conn.prepareStatement(
+            "SELECT encrypted_password FROM USERS WHERE username = ?")) {
 
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                String storedEncryptedPassword = rs.getString("encrypted_password");
-                return cipher.checkPasswd(storedEncryptedPassword, inputPassword);  // Validate password using Cipher
-            } else {
-                System.out.println("User not found.");
-                return false;
-            }
-
-        } catch (SQLException ex) {
-            System.out.println("Error checking password: " + ex.getMessage());
+        if (rs.next()) {
+            String storedEncryptedPassword = rs.getString("encrypted_password");
+            // Now the cipher.checkPassword method compares the stored encrypted password with the input password
+            return cipher.checkPassword(storedEncryptedPassword, inputPassword);
+        } else {
+            System.out.println("User not found.");
             return false;
         }
+
+    } catch (SQLException ex) {
+        System.out.println("Error checking password: " + ex.getMessage());
+        return false;
     }
+}
 
     // Exit and close connections if necessary (optional for embedded Derby DB)
     public void exit() {
