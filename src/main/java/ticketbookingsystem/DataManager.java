@@ -4,7 +4,7 @@ import cipheredUser.Cipher;
 import java.sql.*;
 
 public class DataManager {
-    private static final String DB_URL = "jdbc:derby:myDB;create=true";  // Derby Database URL
+    private static final String DB_URL = "jdbc:derby:ticketDB;create=true";  // Derby Database URL
 
     // Ensure database and tables are created
     public DataManager() {
@@ -13,16 +13,29 @@ public class DataManager {
 
     // Create USERS and BOOKINGS tables if they don't exist
     private void createDatabaseAndTable() {
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement stmt = conn.createStatement()) {
+    try (Connection conn = DriverManager.getConnection(DB_URL);
+         Statement stmt = conn.createStatement()) {
 
-            String createUsersTableSQL = "CREATE TABLE IF NOT EXISTS USERS ("
+        // 获取数据库的元数据
+        DatabaseMetaData dbMetaData = conn.getMetaData();
+
+        // 检查 USERS 表是否存在
+        ResultSet usersTable = dbMetaData.getTables(null, null, "USERS", null);
+        if (!usersTable.next()) {  // 如果表不存在，则创建表
+            String createUsersTableSQL = "CREATE TABLE USERS ("
                     + "username VARCHAR(255) PRIMARY KEY,"
                     + "email VARCHAR(255),"
                     + "encrypted_password VARCHAR(255))";
             stmt.executeUpdate(createUsersTableSQL);
+            System.out.println("USERS table created successfully.");
+        } else {
+            System.out.println("USERS table already exists.");
+        }
 
-            String createBookingsTableSQL = "CREATE TABLE IF NOT EXISTS BOOKINGS ("
+        // 检查 BOOKINGS 表是否存在
+        ResultSet bookingsTable = dbMetaData.getTables(null, null, "BOOKINGS", null);
+        if (!bookingsTable.next()) {  // 如果表不存在，则创建表
+            String createBookingsTableSQL = "CREATE TABLE BOOKINGS ("
                     + "username VARCHAR(255),"
                     + "movie_name VARCHAR(255),"
                     + "show_date VARCHAR(255),"
@@ -31,13 +44,16 @@ public class DataManager {
                     + "price DOUBLE,"
                     + "FOREIGN KEY (username) REFERENCES USERS(username))";
             stmt.executeUpdate(createBookingsTableSQL);
-
-            System.out.println("Database and tables initialized successfully.");
-
-        } catch (SQLException ex) {
-            System.out.println("Error initializing database: " + ex.getMessage());
+            System.out.println("BOOKINGS table created successfully.");
+        } else {
+            System.out.println("BOOKINGS table already exists.");
         }
+
+    } catch (SQLException ex) {
+        System.out.println("Error initializing database: " + ex.getMessage());
     }
+}
+
 
     // Save booking to the database
     public void saveBooking(Booking booking) {

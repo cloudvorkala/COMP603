@@ -11,4 +11,27 @@
         <maven.compiler.target>11</maven.compiler.target>
         <exec.mainClass>com.mycompany.ticketbookingsystem_maven.Ticketbookingsystem_maven</exec.mainClass>
     </properties>
+    <dependencies>
+        <!-- Apache Derby Embedded dependency -->
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.15.2.0</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Plugin to run the project using the specified main class -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <mainClass>${exec.mainClass}</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
