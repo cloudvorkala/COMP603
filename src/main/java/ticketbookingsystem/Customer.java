@@ -12,10 +12,18 @@ public class Customer {
     private String encryptedPassword; // Save encrypted password
 
     // Constructor: used for creating new user or loading from database
-    public Customer(String name, String email, String encryptedPassword) {
-        this.name = name;
+    // Constructor for creating a new customer (password is encrypted and stored)
+    public Customer(String username, String email, String plainTextPassword, Cipher cipher) {
+        this.name = username;
         this.email = email;
-        this.encryptedPassword = encryptedPassword;  // Store encrypted password directly
+        this.encryptedPassword = cipher.encryptMessage(plainTextPassword);  // Encrypt the password upon user creation
+    }
+
+    // Constructor for loading a customer from the database (password is already encrypted)
+    public Customer(String username, String email, String encryptedPassword) {
+        this.name = username;
+        this.email = email;
+        this.encryptedPassword = encryptedPassword;  // Already encrypted password from database
     }
 
     // Getter for customer name
@@ -39,9 +47,9 @@ public class Customer {
     }
 
     // Check if the provided plain text password matches the encrypted one
-    public boolean checkPassword(String plainTextPassword, Cipher cipher) {
-        // Use Cipher class to check if the provided password matches the encrypted one
-        return cipher.checkPassword(encryptedPassword, plainTextPassword);
+    public boolean checkPassword(String inputPassword, Cipher cipher) {
+        // Use Cipher class to check if the provided password matches the decrypted one
+        return cipher.checkPassword(this.name, inputPassword);
     }
     public void displayMenu() {
         System.out.println("1. Book a ticket");

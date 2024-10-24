@@ -106,9 +106,37 @@ public class Cipher {
     }
 
     // Check if the input password matches the encrypted password
-    public boolean checkPassword(String storedEncryptedPassword, String inputPassword) {
-    String encryptedInput = encryptMessage(inputPassword).trim();  // 去掉可能的空格或其他字符
-    //System.out.println("Checking password: Encrypted input -> " + encryptedInput + ", Stored -> " + storedEncryptedPassword.trim());  // 确保比较一致
-    return storedEncryptedPassword.trim().equals(encryptedInput);  // 比较时确保两边一致
-}
+    // Modified checkPassword: takes the username and password as input
+    public boolean checkPassword(String username, String inputPassword) {
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:ticketDB;create=true");
+             PreparedStatement ps = conn.prepareStatement(
+                "SELECT encrypted_password FROM USERS WHERE username = ?")) {
+
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String storedEncryptedPassword = rs.getString("encrypted_password");
+
+                // Decrypt the stored password using the private key
+                String decryptedStoredPassword = decryptMessage(storedEncryptedPassword);
+
+                // Compare decrypted stored password with the input password
+                if (decryptedStoredPassword.equals(inputPassword)) {
+                    System.out.println("Password match successful!");
+                    return true;  // Password matches
+                } else {
+                    System.out.println("Password does not match.");
+                    return false;  // Password does not match
+                }
+            } else {
+                System.out.println("User not found.");
+                return false;
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Error checking password: " + ex.getMessage());
+            return false;
+        }
+    }
 }
