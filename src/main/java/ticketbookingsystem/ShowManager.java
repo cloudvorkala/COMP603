@@ -1,13 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package ticketbookingsystem;
+
 
 /**
  *
  * @author Yzhang & cloud
  */
+package ticketbookingsystem;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,15 +20,14 @@ public class ShowManager {
         return movieShows;
     }
 
-    public MovieShow selectMovieShow(String movieName, String date, String time) {
+    // Select a movie show by its unique ID
+    public MovieShow selectMovieShowById(int showId) {
         for (MovieShow movieShow : movieShows) {
-            if (movieShow.getMovieName().equalsIgnoreCase(movieName) &&
-                movieShow.getDate().equals(date) &&
-                movieShow.getTime().equals(time)) {
+            if (movieShow.getShowId() == showId) {
                 return movieShow;
             }
         }
-        return null;
+        return null;  // Return null if no show is found with the given ID
     }
 }
 

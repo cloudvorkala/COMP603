@@ -16,12 +16,12 @@ public class DataManager {
     try (Connection conn = DriverManager.getConnection(DB_URL);
          Statement stmt = conn.createStatement()) {
 
-        // 获取数据库的元数据
+        // Get database metadata
         DatabaseMetaData dbMetaData = conn.getMetaData();
 
-        // 检查 USERS 表是否存在
+        // Check if USERS table exists
         ResultSet usersTable = dbMetaData.getTables(null, null, "USERS", null);
-        if (!usersTable.next()) {  // 如果表不存在，则创建表
+        if (!usersTable.next()) {  //If the table doesn't exist, create it
             String createUsersTableSQL = "CREATE TABLE USERS ("
                     + "username VARCHAR(255) PRIMARY KEY,"
                     + "email VARCHAR(255),"
@@ -32,9 +32,8 @@ public class DataManager {
             System.out.println("USERS table already exists.");
         }
 
-        // 检查 BOOKINGS 表是否存在
         ResultSet bookingsTable = dbMetaData.getTables(null, null, "BOOKINGS", null);
-        if (!bookingsTable.next()) {  // 如果表不存在，则创建表
+        if (!bookingsTable.next()) {  
             String createBookingsTableSQL = "CREATE TABLE BOOKINGS ("
                     + "username VARCHAR(255),"
                     + "movie_name VARCHAR(255),"
@@ -176,6 +175,25 @@ public class DataManager {
             return false;
         }
     }
+    
+    public boolean isSeatAlreadyBooked(String username, String movieName, String date, String time, String seatNumber) {
+    try (Connection conn = DriverManager.getConnection(DB_URL);
+         PreparedStatement ps = conn.prepareStatement(
+             "SELECT * FROM BOOKINGS WHERE username = ? AND movie_name = ? AND show_date = ? AND show_time = ? AND seat_number = ?")) {
+
+        ps.setString(1, username);
+        ps.setString(2, movieName);
+        ps.setString(3, date);
+        ps.setString(4, time);
+        ps.setString(5, seatNumber);
+        ResultSet rs = ps.executeQuery();
+
+        return rs.next();  // If a record is found, the seat is already booked
+    } catch (SQLException ex) {
+        System.out.println("Error checking booking: " + ex.getMessage());
+        return false;
+    }
+}
     //testing 
     public void viewUsersTable() {
         try (Connection conn = DriverManager.getConnection(DB_URL);
