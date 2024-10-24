@@ -23,6 +23,7 @@ public class BookingSystem {
             System.out.println("Welcome to the Movie Ticket Booking System");
             System.out.println("1. Login as Customer");
             System.out.println("2. Create New Customer");
+            //System.out.println("3. View UsersTable");//testing to show database users
             System.out.println("3. Exit");
             String input = getValidatedInput();  // Unified input method that allows "exit"
             
@@ -33,6 +34,9 @@ public class BookingSystem {
                 case "2":
                     createNewCustomer();
                     break;
+                /*case "3":
+                    dataManager.viewUsersTable();  // View BOOKINGS table data
+                    break;*/
                 case "3":
                     System.out.println("Exiting system...");
                     dataManager.exit();

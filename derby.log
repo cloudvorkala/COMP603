@@ -1,7 +1,20 @@
 ----------------------------------------------------------------
-Wed Oct 23 21:48:49 NZDT 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-0192-b890-7a9a-00001f40a1a8 
+Thu Oct 24 23:04:30 NZDT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-0192-bdfc-1f8c-00001f4065a8 
 on database directory C:\Users\C.V\Desktop\AUT\COMP603\my603\ticketbookingsystem_maven_temp1\ticketbookingsystem_maven\ticketDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@7aec35a 
+Loaded from file:/C:/Users/C.V/.m2/repository/org/apache/derby/derby/10.15.2.0/derby-10.15.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=11.0.23+7-LTS-222
+user.dir=C:\Users\C.V\Desktop\AUT\COMP603\my603\ticketbookingsystem_maven_temp1\ticketbookingsystem_maven
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Thu Oct 24 23:04:30 NZDT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance 582f8014-0192-bdfc-1f8c-00001f4065a8 
+on database directory C:\Users\C.V\Desktop\AUT\COMP603\my603\ticketbookingsystem_maven_temp1\ticketbookingsystem_maven\keysDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@7aec35a 
 Loaded from file:/C:/Users/C.V/.m2/repository/org/apache/derby/derby/10.15.2.0/derby-10.15.2.0.jar
 java.vendor=Oracle Corporation
 java.runtime.version=11.0.23+7-LTS-222

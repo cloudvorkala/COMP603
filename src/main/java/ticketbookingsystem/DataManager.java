@@ -111,13 +111,17 @@ public class DataManager {
 
             ps.setString(1, username);
             ps.setString(2, email);
-            ps.setString(3, encryptedPassword);
+            ps.setString(3, encryptedPassword);  // Save the encrypted password
             ps.executeUpdate();
 
             System.out.println("User saved successfully.");
 
         } catch (SQLException ex) {
-            System.out.println("Error saving user: " + ex.getMessage());
+            if (ex.getSQLState().equals("23505")) {  // SQL state 23505 corresponds to a unique constraint violation (duplicate username)
+                System.out.println("Error: Username already exists.");
+            } else {
+                System.out.println("Error saving user: " + ex.getMessage());
+            }
         }
     }
 
@@ -148,6 +152,7 @@ public class DataManager {
     }
 
     // Check user password
+     // Check user password by decrypting the stored password
     public boolean checkUserPassword(String username, String inputPassword, Cipher cipher) {
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement ps = conn.prepareStatement(
@@ -158,7 +163,9 @@ public class DataManager {
 
             if (rs.next()) {
                 String storedEncryptedPassword = rs.getString("encrypted_password");
-                return cipher.checkPasswd(storedEncryptedPassword, inputPassword);  // Validate password using Cipher
+
+                // Use Cipher to check if the input password matches the decrypted stored password
+                return cipher.checkPassword(username, inputPassword);
             } else {
                 System.out.println("User not found.");
                 return false;
@@ -167,6 +174,24 @@ public class DataManager {
         } catch (SQLException ex) {
             System.out.println("Error checking password: " + ex.getMessage());
             return false;
+        }
+    }
+    //testing 
+    public void viewUsersTable() {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM USERS")) {
+
+            System.out.println("USERS table data:");
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String email = rs.getString("email");
+                String encryptedPassword = rs.getString("encrypted_password");
+                System.out.println("Username: " + username + ", Email: " + email + ", Encrypted Password: " + encryptedPassword);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Error viewing USERS table: " + ex.getMessage());
         }
     }
 
