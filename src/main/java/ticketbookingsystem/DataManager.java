@@ -212,6 +212,39 @@ public class DataManager {
             System.out.println("Error viewing USERS table: " + ex.getMessage());
         }
     }
+    
+    public String getBookingsForUser(String username) {
+    StringBuilder bookingsInfo = new StringBuilder();
+    try (Connection conn = DriverManager.getConnection(DB_URL);
+         PreparedStatement ps = conn.prepareStatement(
+            "SELECT movie_name, show_date, show_time, seat_number, price FROM BOOKINGS WHERE username = ?")) {
+
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            String movieName = rs.getString("movie_name");
+            String showDate = rs.getString("show_date");
+            String showTime = rs.getString("show_time");
+            String seatNumber = rs.getString("seat_number");
+            double price = rs.getDouble("price");
+
+            bookingsInfo.append("Movie: ").append(movieName)
+                        .append(", Date: ").append(showDate)
+                        .append(", Time: ").append(showTime)
+                        .append(", Seat: ").append(seatNumber)
+                        .append(", Price: $").append(price).append("\n");
+        }
+    } catch (SQLException ex) {
+        return "Error loading bookings: " + ex.getMessage();
+    }
+
+    if (bookingsInfo.length() == 0) {
+        return "No bookings found for user " + username;
+    } else {
+        return bookingsInfo.toString();
+    }
+}
 
     // Exit and close connections if necessary (optional for embedded Derby DB)
     public void exit() {
